@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang = "en">
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta charset = "UTF-8" />
+        <title>Result Page</title>
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='result.css') }}">
+    </head>
+
+    <body>
+        <div class="container">
+            <div class="header">
+                <img class="logo" src="/static/logo.png">
+                <p>Let's Crack</p>
+            </div>
+            <div class="box">
+                <h1>Your Result is here: {{ score }}%</h1>
+            </div>
+        </div>
+    </body>
+</html>

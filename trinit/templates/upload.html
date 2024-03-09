@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang = "en">
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta charset = "UTF-8" />
+        <title>Upload Page</title>
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='upload.css') }}">
+    </head>
+
+    <body>
+        <div class="container">
+            <div class="header">
+                <img class="logo" src="/static/logo.png">
+                <p>Let's Crack</p>
+            </div>
+            <div class="typing-text">
+                <p>Learn  Practice  Succeed</p>
+            </div>
+            <div class="box">
+                <form action = "/upload" method = "post" enctype="multipart/form-data">
+                    <h4 class="text">Submit the File here:</h4>
+                    <input class="file" type="file" name = "file" >
+                    <input type = "submit" value = "Upload">
+                </form>
+            </div>
+        </div>
+        <script src="/static/upload.js"></script>
+    </body>
+</html>

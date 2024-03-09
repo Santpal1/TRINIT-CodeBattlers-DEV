@@ -1,0 +1,28 @@
+<!DOCTYPE HTML>
+<HTML lang="en">
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta charset = "UTF-8" />
+        <title>Home Page</title>
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='index.css') }}">
+    </head>
+
+    <body>
+        <div class="container">
+            <div class="header">
+                <img class="logo" src="/static/logo.png">
+                <div class="profile">Let's Crack</div>
+            </div>
+
+            <h1 class="content">Questions <br>
+                Practicing Application</h1>
+            <div class="quote">
+                <p>"Education is our Passport to the Future, for</p>
+                <p>Tomorrow belongs to the people who prepare for it Today."</p>
+                <br>
+                <p>~ Malcolm X</p>
+            </div>
+            <a href = "/upload"><button class="btn">Go to Upload Page</button></a>
+        </div>
+    </body>
+</HTML>

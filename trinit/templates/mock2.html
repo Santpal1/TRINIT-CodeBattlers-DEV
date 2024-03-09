@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mock Learning</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='mcq.css') }}">
+    <style>
+        .timer {
+            text-align: center;
+            font-size: 24px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="question-container">
+        {% for mcq in mcqs %}
+        {% if loop.index > 1 %} {# Ignore the first question #}
+        <div class="question" style="display: {% if loop.index == 2 %}block{% else %}none{% endif %};">
+            <p class="questext">{{ mcq.number }}. {{ mcq.text }}</p>
+        </div>
+        <div class="answers" style="display: {% if loop.index == 2 %}block{% else %}none{% endif %};">
+            {% for option in mcq.options %}
+            <div class="answer" onclick="colorConversion(this)">
+                {{ option }}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% endfor %}
+    </div>
+    <button id="next-button" class="next" onclick="nextQuestion()">Next</button>
+    <button id="submit-button" style="display: none;" onclick="calculateScore()">Submit</button>
+    <div class="timer" id="timer">60s</div> <!-- Timer element -->
+</div>
+
+<script>
+var currentQuestionIndex = -1; // Start from -1 to ignore the first question
+var totalQuestions = {{ mcqs|length }};
+var correctAnswersCount = 0;
+var timeLeft = 60;
+
+function startTimer() {
+    var timerDisplay = document.getElementById("timer");
+    var intervalId = setInterval(function() {
+        timeLeft--;
+        if (timeLeft <= 0) {
+            clearInterval(intervalId);
+            timerDisplay.textContent = "Time's up!";
+            nextQuestion();
+        } else {
+            timerDisplay.textContent = timeLeft + "s";
+        }
+    }, 1000);
+}
+
+function showQuestion(index) {
+    var questions = document.getElementsByClassName('question');
+    for (var i = 0; i < questions.length; i++) {
+        questions[i].style.display = 'none';
+    }
+    questions[index].style.display = 'block';
+
+    var answers = document.getElementsByClassName('answers');
+    for (var i = 0; i < answers.length; i++) {
+        answers[i].style.display = 'none';
+    }
+    answers[index].style.display = 'block';
+
+    // Start the timer only if it's the first question or the timer has not been started yet
+    if (index === 0 || !window.timerStarted) {
+        startTimer();
+        window.timerStarted = true;
+    }
+
+    // Show submit button if it's the last question
+    var submitButton = document.getElementById('submit-button');
+    var nextButton = document.getElementById('next-button');
+    if (index === totalQuestions - 2) { // Corrected condition
+        submitButton.style.display = 'block';
+        nextButton.style.display = 'none';
+    } else {
+        submitButton.style.display = 'none';
+        nextButton.style.display = 'block';
+    }
+}
+
+function nextQuestion() {
+    currentQuestionIndex++;
+    if (currentQuestionIndex >= totalQuestions - 1) { // Corrected condition
+        currentQuestionIndex = 0;
+    }
+    showQuestion(currentQuestionIndex);
+}
+
+function prevQuestion() {
+    currentQuestionIndex--;
+    if (currentQuestionIndex < 0) {
+        currentQuestionIndex = totalQuestions - 1;
+    }
+    showQuestion(currentQuestionIndex);
+}
+
+function colorConversion(element) {
+    // Reset background color for all options
+    var answers = element.parentElement.getElementsByClassName('answer');
+    for (var i = 0; i < answers.length; i++) {
+        answers[i].style.backgroundColor = '';
+    }
+    // Mark selected option as dark red if not option C
+    if (element.innerHTML.charAt(0) !== 'c' && element.innerHTML.charAt(0) !== 'C') {
+        element.style.backgroundColor = 'darkred';
+    }
+    // Mark option C as correct (green) and increment correctAnswersCount if selected
+    var optionC = element.parentElement.getElementsByClassName('answer')[2]; // Option C is the third option (index 2)
+    optionC.style.backgroundColor = 'green';
+    if (element === optionC) {
+        correctAnswersCount++;
+    }
+}
+
+function calculateScore() {
+    var scorePercentage = (correctAnswersCount / (totalQuestions - 1)) * 100; // Subtract 1 for the skipped question
+    // Redirect to result.html with the score as a query parameter
+    window.location.href = 'result?score=' + scorePercentage.toFixed(2);
+}
+</script>
+
+</body>
+</html>
